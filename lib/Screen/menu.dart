@@ -4,6 +4,7 @@ import 'package:flutter_carousel_slider/carousel_slider_transforms.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_size_text_pk/auto_size_text_pk.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:connectivity_wrapper/connectivity_wrapper.dart';
 
 // import 'package:google_fonts/google_fonts.dart';
 
@@ -43,6 +44,7 @@ class MenuLayout extends StatefulWidget {
 
 class _MenuLayoutState extends State<MenuLayout> {
   late CarouselSliderController _sliderController;
+
   @override
   void initState() {
     super.initState();
@@ -221,15 +223,27 @@ class _MenuLayoutState extends State<MenuLayout> {
                             children: [
                               ///card 1
                               GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => ListsViewCustom(
-                                        "Events",
+                                onTap: () async {
+                                  if (await ConnectivityWrapper
+                                      .instance.isConnected) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ListsViewCustom(
+                                          "Events",
+                                        ),
                                       ),
-                                    ),
-                                  );
+                                    );
+                                  } else {
+                                    showDialog(
+                                      context: context,
+                                      builder: (_) => AlertDialog(
+                                        title: Text("WARNING"),
+                                        content: Text(
+                                            "The device has no internet connection.\n Please contact your internet service provider"),
+                                      ),
+                                    );
+                                  }
                                 },
                                 child: Container(
                                   height: wyd * sqr,
@@ -270,14 +284,27 @@ class _MenuLayoutState extends State<MenuLayout> {
                                 ),
                               ),
                               GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => ListsViewCustom(
-                                              "Fundraising",
-                                            )),
-                                  );
+                                onTap: () async {
+                                  if (await ConnectivityWrapper
+                                      .instance.isConnected) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => ListsViewCustom(
+                                                "Fundraising",
+                                              )),
+                                    );
+                                  } else {
+                                    showDialog(
+                                      context: context,
+                                      builder: (_) => AlertDialog(
+                                        title: Text("WARNING"),
+                                        content: Text(
+                                            "The device has no internet connection.\n Please contact your internet service provider"),
+                                      ),
+                                    );
+                                  }
+                                  ;
                                 },
                                 child: Container(
                                   height: wyd * sqr,
@@ -322,14 +349,28 @@ class _MenuLayoutState extends State<MenuLayout> {
 
                               ///card 3
                               GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
+                                onTap: () async {
+                                  if (await ConnectivityWrapper
+                                      .instance.isConnected) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
                                         builder: (context) => ListsViewCustom(
-                                              "Ministries",
-                                            )),
-                                  );
+                                          "Ministries",
+                                        ),
+                                      ),
+                                    );
+                                  } else {
+                                    showDialog(
+                                      context: context,
+                                      builder: (_) => AlertDialog(
+                                        title: Text("WARNING"),
+                                        content: Text(
+                                            "The device has no internet connection.\n Please contact your internet service provider"),
+                                      ),
+                                    );
+                                  }
+                                  ;
                                 },
                                 child: Container(
                                   height: wyd * sqr,

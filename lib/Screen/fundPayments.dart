@@ -1,19 +1,23 @@
 import 'dart:convert';
 
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:sn_progress_dialog/sn_progress_dialog.dart';
+
+bool isEnabled = true;
 
 // ignore: must_be_immutableflutter pu
-class UniPayment extends StatefulWidget {
+class FundPayment extends StatefulWidget {
   String title;
   String id;
-  UniPayment({required this.title, required this.id});
+  FundPayment({required this.title, required this.id});
 
   @override
   _PaymentState createState() => _PaymentState(title: title, id: id);
 }
 
-class _PaymentState extends State<UniPayment> {
+class _PaymentState extends State<FundPayment> {
   String title;
   String id;
   _PaymentState({required this.title, required this.id});
@@ -41,50 +45,102 @@ class PayView extends StatefulWidget {
 class _PayViewState extends State<PayView> {
   String newid;
   _PayViewState({required this.newid});
+  late String _dia ="";
 
   late String _cnt;
   late String _amt;
   late String _name;
   late String _email;
-  late String _address;
+
   bool _isPaid = false;
-  late Map _resData;
 
   var _payResults;
+
 
   GlobalKey<FormState> _payForm = GlobalKey<FormState>();
 
   Future<dynamic> payPledge(String _id, String cont, String amt) async {
-    var urlF = Uri.parse(
-        "https://payments.yesuahuriire.org/ministries/pledges/transactions");
-
-    var headers = {'Content-Type': 'application/json'};
-    var request = http.Request(
-      'POST',
-      urlF,
-    );
-    request.body =
-        json.encode({"pledge": "$_id", "contact": "$_cnt", "amount": "$_amt"});
+    print("Started....");
+    setState(() {
+      _dia ="sending request...";
+      isEnabled = false;
+    });
+    var headers = {
+      'Content-Type': 'application/json'
+    };
+    var request = http.Request('POST', Uri.parse('https://payments.yesuahuriire.org/fundraisings/transactions'));
+    request.body = json.encode({
+      "fundraising": 1,
+      "name": "$_name",
+      "address": "N/L",
+      "amount": _amt,
+      "email": _email,
+      "contact": _cnt
+    });
     request.headers.addAll(headers);
 
-    try {
-      var response = await request.send();
-      if (response.statusCode == 200) {
-        _payResults = json.decode(await response.stream.bytesToString());
-        print("code state ${_payResults["success"]}");
-        setState(() {
-          _isPaid = true;
-          _resData = _payResults;
-        });
-        return _payResults;
-      }
-    } on Exception catch (e) {
-      print(e);
+    http.StreamedResponse response = await request.send();
+    print(response.statusCode);
+
+    if (response.statusCode == 201) {
+      _payResults = json.decode(await response.stream.bytesToString());
+      setState(() {
+        isEnabled = true;
+              });
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: Text(_payResults["messages"][0]),
+          content: Text("Please approve the payment request \n sent to your phone"),
+        ),
+      );
     }
+    else {
+      print("Else ${response.reasonPhrase}");
+    }
+
+    // var urlF = Uri.parse("https://payments.yesuahuriire.org/events/donations");
+    //
+    // var headers = {
+    //   'Content-Type': 'application/json',
+    //   'Charset': 'utf-8',
+    // };
+    // var request = http.Request(
+    //   'POST',
+    //   urlF,
+    // );
+    // request.body = json.encode({
+    //   "fundraising": 1,
+    //   "name": "Innocent Bigega",
+    //   "address": "N/L",
+    //   "amount": 500,
+    //   "email": "ibigega23@gmail.com",
+    //   "contact": "0755876951"
+    // });
+    // request.headers.addAll(headers);
+    // print("Getting ready....");
+    // try {
+    //   var response = await request.send();
+    //   print(response.statusCode);
+    //   if (response.statusCode == 400) {
+    //     print("ready....");
+    //     _payResults = json.decode(await response.stream.bytesToString());
+    //     print(_payResults);
+    //     setState(() {
+    //       _isPaid = true;
+    //       isEnabled = true;
+    //     });
+    //     return _payResults;
+    //   }
+    // } on Exception catch (e) {
+    //   print(e);
+    // }
   }
 
   @override
   Widget build(BuildContext context) {
+    ProgressDialog pd = ProgressDialog(context: context);
+
     return Padding(
       padding: const EdgeInsets.all(15),
       child: SingleChildScrollView(
@@ -158,7 +214,7 @@ class _PayViewState extends State<PayView> {
                     ),
                     TextFormField(
                       autofillHints: [AutofillHints.email],
-                      keyboardType: TextInputType.name,
+                      keyboardType: TextInputType.emailAddress,
                       textInputAction: TextInputAction.next,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
@@ -188,9 +244,9 @@ class _PayViewState extends State<PayView> {
 
                         hintText: "Enter your email",
                       ),
-                      // validator: (value) => !EmailValidator.validate(value)
-                      //     ? "Invalid email"
-                      //     : null,
+                      validator: (value) => !EmailValidator.validate(value)
+                          ? "Invalid email"
+                          : null,
                       onSaved: (value) {
                         setState(() {
                           _email = value!;
@@ -300,16 +356,22 @@ class _PayViewState extends State<PayView> {
                     ),
                     MaterialButton(
                       color: Theme.of(context).primaryColor,
-                      child: Text(
-                        "pay",
-                        style: TextStyle(color: Colors.white),
-                      ),
+                      child: isEnabled
+                          ? Text(
+                              "Make payment",
+                              style: TextStyle(color: Colors.white),
+                            )
+                          : Text(
+                              "Loading.....",
+                              style: TextStyle(color: Colors.white),
+                            ),
                       onPressed: () {
                         FocusManager.instance.primaryFocus!.unfocus();
                         if (!_payForm.currentState!.validate()) {
                           return;
                         }
                         _payForm.currentState!.save();
+                        !isEnabled? pd.show(max: 2, msg: _dia,backgroundColor: Theme.of(context).primaryColor):null;
                         payPledge(newid, _cnt, _amt);
                         print(_name);
                         print(_email);
@@ -317,6 +379,7 @@ class _PayViewState extends State<PayView> {
                         print(_cnt);
                         print(_amt);
                         print("done");
+
                       },
                     )
                   ],

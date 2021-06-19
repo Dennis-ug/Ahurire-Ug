@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:nabiituapp/testdata/services.dart';
 import 'package:http/http.dart' as http;
+
 bool isEnabled = true;
 
 class Payment extends StatefulWidget {
@@ -49,6 +50,9 @@ class _PayViewState extends State<PayView> {
   GlobalKey<FormState> _payForm = GlobalKey<FormState>();
 
   Future<dynamic> payPledge(String id, String cont, String amt) async {
+    setState(() {
+      isEnabled = false;
+    });
     var urlF = Uri.parse(
         "https://payments.yesuahuriire.org/ministries/pledges/transactions");
 
@@ -77,7 +81,6 @@ class _PayViewState extends State<PayView> {
       print(e);
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -153,18 +156,18 @@ class _PayViewState extends State<PayView> {
                     MaterialButton(
                       enableFeedback: isEnabled,
                       color: Theme.of(context).primaryColor,
-                      child: isEnabled? Text(
-                        "Make payment",
-                        style: TextStyle(color: Colors.white),
-                      ):Text(
-                        "Loading.....",
-                        style: TextStyle(color: Colors.white),
-                      ),
+                      child: isEnabled
+                          ? Text(
+                              "Make payment",
+                              style: TextStyle(color: Colors.white),
+                            )
+                          : Text(
+                              "Loading.....",
+                              style: TextStyle(color: Colors.white),
+                            ),
                       onPressed: () {
                         FocusManager.instance.primaryFocus!.unfocus();
-                        setState(() {
-                          isEnabled = false;
-                        });
+
                         if (!_payForm.currentState!.validate()) {
                           return;
                         }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:nabiituapp/Screen/eventsPayments.dart';
 import 'package:nabiituapp/testdata/services.dart';
 
+import 'ministryPayments.dart';
 import 'pledge.dart';
 
 class Ministries extends StatefulWidget {
@@ -110,8 +111,8 @@ class _DetailState extends State<Details> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => UniPayment(
-                                title: "Events",
+                          builder: (context) => MinistryPayment(
+                                title: _obj.ministryName,
                                 id: _obj.ministryId,
                               )));
                 },

@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:flutter/material.dart';
 import 'package:nabiituapp/Screen/eventsPayments.dart';
+import 'package:nabiituapp/Screen/fundPayments.dart';
 import 'package:nabiituapp/testdata/services.dart';
 import 'package:cupertino_progress_bar/cupertino_progress_bar.dart';
 
@@ -109,8 +110,8 @@ class _DetailState extends State<Details> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => UniPayment(
-                                title: "Events",
+                          builder: (context) => FundPayment(
+                                title: _obj.fundTitle,
                                 id: _obj.fundId,
                               )));
                 },

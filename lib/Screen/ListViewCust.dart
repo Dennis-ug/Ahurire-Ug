@@ -1,3 +1,4 @@
+import 'package:connectivity_wrapper/connectivity_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:nabiituapp/testdata/services.dart';
@@ -21,9 +22,11 @@ class ListsViewCustom extends StatefulWidget {
 
 class _EventsState extends State<ListsViewCustom> {
   final String _cardName;
+
   _EventsState(
     this._cardName,
   );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,6 +93,7 @@ class _EventsViewState extends State<EventsView> {
   String out = "Loading....";
 
   final String _cardName;
+
   _EventsViewState(
     this._cardName,
   );
@@ -139,32 +143,44 @@ class _EventsViewState extends State<EventsView> {
                             itemCount: snapshot.data.length,
                             itemBuilder: (_, int index) {
                               return ListTile(
-                                onTap: () {
-                                  _cardName == "Events"
-                                      ? Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => DetailsPage(
-                                                snapshot.data[index]),
-                                          ),
-                                        )
-                                      : _cardName == "Fundraising"
-                                          ? Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    FundDetails(
-                                                        snapshot.data[index]),
-                                              ),
-                                            )
-                                          : Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    Ministries(
-                                                        snapshot.data[index]),
-                                              ),
-                                            );
+                                onTap: () async {
+                                  if (await ConnectivityWrapper
+                                      .instance.isConnected) {
+                                    _cardName == "Events"
+                                        ? Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => DetailsPage(
+                                                  snapshot.data[index]),
+                                            ),
+                                          )
+                                        : _cardName == "Fundraising"
+                                            ? Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      FundDetails(
+                                                          snapshot.data[index]),
+                                                ),
+                                              )
+                                            : Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      Ministries(
+                                                          snapshot.data[index]),
+                                                ),
+                                              );
+                                  } else {
+                                    showDialog(
+                                      context: context,
+                                      builder: (_) => AlertDialog(
+                                        title: Text("WARNING"),
+                                        content: Text(
+                                            "The device has no internet connection.\n Please contact your internet service provider"),
+                                      ),
+                                    );
+                                  }
                                 },
                                 leading: CircleAvatar(
                                   foregroundColor: Colors.white,

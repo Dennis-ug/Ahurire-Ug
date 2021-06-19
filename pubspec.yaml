@@ -28,6 +28,9 @@ dependencies:
   auto_size_text_pk: ^3.0.0
   cupertino_progress_bar: ^0.2.0
   cached_network_image: ^3.0.0
+  email_validator: '^1.0.6'
+  sn_progress_dialog: ^1.0.2
+  connectivity_wrapper: ^1.0.6
   
   
   http: ^0.13.3
