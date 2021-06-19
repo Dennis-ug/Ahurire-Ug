@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:nabiituapp/Screen/univePayments.dart';
+import 'package:nabiituapp/Screen/eventsPayments.dart';
 import 'package:nabiituapp/testdata/services.dart';
 
 import 'pledge.dart';
@@ -75,24 +75,30 @@ class _DetailState extends State<Details> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  clipBehavior: Clip.antiAlias,
-                  //*Exemption review */
-                  child:CachedNetworkImage(
-                    imageUrl: "https://pay.yesuahuriire.org/ministry-images/${_obj.ministryImg}",
-                    progressIndicatorBuilder: (context, url, downloadProgress) =>
-                        Center(child:Container(height: 50,width:50,child: CircularProgressIndicator(color: Theme.of(context).primaryColor,))),
-                    errorWidget: (context, url, error) => Icon(Icons.error),
-
-                  )
-                  // Image(
-                  //   image: NetworkImage(
-                  //       "https://pay.yesuahuriire.org/ministry-images/${_obj.ministryImg}",
-                  //       headers: null),
-                  // ),
-                ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    clipBehavior: Clip.antiAlias,
+                    //*Exemption review */
+                    child: CachedNetworkImage(
+                      imageUrl:
+                          "https://pay.yesuahuriire.org/ministry-images/${_obj.ministryImg}",
+                      progressIndicatorBuilder:
+                          (context, url, downloadProgress) => Center(
+                              child: Container(
+                                  height: 50,
+                                  width: 50,
+                                  child: CircularProgressIndicator(
+                                    color: Theme.of(context).primaryColor,
+                                  ))),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
+                    )
+                    // Image(
+                    //   image: NetworkImage(
+                    //       "https://pay.yesuahuriire.org/ministry-images/${_obj.ministryImg}",
+                    //       headers: null),
+                    // ),
+                    ),
               ),
               SizedBox(
                 height: _hyt * 0.1025,
@@ -105,9 +111,9 @@ class _DetailState extends State<Details> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => UniPayment(
-                            title: "Events",
-                            id: _obj.ministryId,
-                          )));
+                                title: "Events",
+                                id: _obj.ministryId,
+                              )));
                 },
                 child: Container(
                   height: _hyt * 0.0558035714285714,

@@ -2,10 +2,9 @@ import 'package:auto_size_text_pk/auto_size_text_pk.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:flutter/material.dart';
-import 'package:nabiituapp/Screen/univePayments.dart';
+import 'package:nabiituapp/Screen/eventsPayments.dart';
 import 'package:nabiituapp/testdata/services.dart';
 import 'package:cupertino_progress_bar/cupertino_progress_bar.dart';
-
 
 class FundDetails extends StatefulWidget {
   final Fund _obj;
@@ -80,13 +79,19 @@ class _DetailState extends State<Details> {
                   ),
                   clipBehavior: Clip.antiAlias,
                   //*Exemption review */
-                  child:CachedNetworkImage(
-        imageUrl: "https://pay.yesuahuriire.org/fundraising-images/${_obj.fundImage}",
-        progressIndicatorBuilder: (context, url, downloadProgress) =>
-                Center(child:Container(height: 50,width:50,child: CircularProgressIndicator(color: Theme.of(context).primaryColor,))),
-        errorWidget: (context, url, error) => Icon(Icons.error),
-
-     ),
+                  child: CachedNetworkImage(
+                    imageUrl:
+                        "https://pay.yesuahuriire.org/fundraising-images/${_obj.fundImage}",
+                    progressIndicatorBuilder:
+                        (context, url, downloadProgress) => Center(
+                            child: Container(
+                                height: 50,
+                                width: 50,
+                                child: CircularProgressIndicator(
+                                  color: Theme.of(context).primaryColor,
+                                ))),
+                    errorWidget: (context, url, error) => Icon(Icons.error),
+                  ),
                   // Image(
                   //   fit: BoxFit.cover,
                   //     image: NetworkImage(
@@ -94,10 +99,9 @@ class _DetailState extends State<Details> {
                   //         headers: null),),
                 ),
               ),
-                SizedBox(
+              SizedBox(
                 height: _hyt * 0.3025,
               ),
-
 
               //Donate button
               GestureDetector(
@@ -106,9 +110,9 @@ class _DetailState extends State<Details> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => UniPayment(
-                            title: "Events",
-                            id: _obj.fundId,
-                          )));
+                                title: "Events",
+                                id: _obj.fundId,
+                              )));
                 },
                 child: Container(
                   height: _hyt * 0.0558035714285714,
@@ -186,102 +190,86 @@ class _DetailState extends State<Details> {
             child: Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-                child:                                 
-                //Funding deatils
-                     Column(
-                        mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Description",
-                            style: TextStyle(
-                                fontFamily: "Poppins-SemiBold"),
+                child:
+                    //Funding deatils
+                    Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Description",
+                      style: TextStyle(fontFamily: "Poppins-SemiBold"),
+                    ),
+                    AutoSizeText(
+                      _obj.fundDetails,
+                      style: TextStyle(
+                          fontSize: (_hyt * 0.3348214285714286) * 0.0521),
+                      maxLines: 4,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Row(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                              color: Theme.of(context).primaryColor),
+                          child: Padding(
+                            padding: const EdgeInsets.all(2),
+                            child: Text(
+                              "Target",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontFamily: "Poppins-SemiBold",
+                                  fontSize:
+                                      (_hyt * 0.3348214285714286) * 0.0501),
+                            ),
                           ),
-                          AutoSizeText(
-                            _obj.fundDetails,
-                            style: TextStyle(
-                                fontSize:
-                                    (_hyt * 0.3348214285714286) *
-                                        0.0521),
-                            maxLines: 4,
-                            overflow: TextOverflow.ellipsis,
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          _obj.fundAmount,
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: (_hyt * 0.3348214285714286) * 0.0501),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                              color: Theme.of(context).primaryColor),
+                          child: Padding(
+                            padding: const EdgeInsets.all(2),
+                            child: Text(
+                              "Target",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontFamily: "Poppins-SemiBold",
+                                  fontSize:
+                                      (_hyt * 0.3348214285714286) * 0.0501),
+                            ),
                           ),
-                          Row(
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                    color: Theme.of(context)
-                                        .primaryColor),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(2),
-                                  child: Text(
-                                    "Target",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontFamily:
-                                            "Poppins-SemiBold",
-                                        fontSize: (_hyt *
-                                                0.3348214285714286) *
-                                            0.0501),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Text(
-                                _obj.fundAmount,
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize:
-                                        (_hyt * 0.3348214285714286) *
-                                            0.0501),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                    color: Theme.of(context)
-                                        .primaryColor),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(2),
-                                  child: Text(
-                                    "Target",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontFamily:
-                                            "Poppins-SemiBold",
-                                        fontSize: (_hyt *
-                                                0.3348214285714286) *
-                                            0.0501),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Text(
-                                _obj.fundBal,
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize:
-                                        (_hyt * 0.3348214285714286) *
-                                            0.0501),
-                              ),
-                            ],
-                          ),
-                          CupertinoProgressBar(
-                            valueColor:
-                                Color.fromRGBO(255, 168, 0, 1),
-                            value: 0.9,
-                            trackColor: Colors.grey,
-                          )
-                        ],
-                      )
-                ),
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          _obj.fundBal,
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: (_hyt * 0.3348214285714286) * 0.0501),
+                        ),
+                      ],
+                    ),
+                    CupertinoProgressBar(
+                      valueColor: Color.fromRGBO(255, 168, 0, 1),
+                      value: 0.9,
+                      trackColor: Colors.grey,
+                    )
+                  ],
+                )),
           ),
         ),
       ],
