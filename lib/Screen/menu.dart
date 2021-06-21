@@ -11,6 +11,7 @@ import 'package:connectivity_wrapper/connectivity_wrapper.dart';
 import 'package:nabiituapp/testdata/testdata.dart';
 
 import 'ListViewCust.dart';
+import 'about.dart';
 
 class MenuScreen extends StatefulWidget {
   const MenuScreen({Key? key}) : super(key: key);
@@ -421,49 +422,50 @@ class _MenuLayoutState extends State<MenuLayout> {
                         SizedBox(
                           height: hyt * 0.0179,
                         ),
-                        Container(
-                          height: (wyd * sqr) / 1.5,
-                          width: wyd * 0.7898550724637681,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 40),
-                            child: Row(
-                              children: [
-                                SizedBox(
-                                  height: (wyd * sqr) * 0.2,
-                                ),
-                                Center(
-                                  child: Container(
-                                    height: (wyd * sqr) / 2,
-                                    width: (wyd * sqr) / 2,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Theme.of(context).primaryColor,
-                                    ),
-                                    child: Center(
-                                      child: FaIcon(
-                                        FontAwesomeIcons.info,
-                                        size: ((wyd * sqr) / 2) / 2,
-                                        color: Colors.white,
+                        GestureDetector(
+                          onTap: (){
+                            Navigator.push(context, MaterialPageRoute(builder: (contex)=>About()));
+                          },
+                          child: Container(
+                            height: (wyd * sqr) / 1.5,
+                            width: wyd * 0.7898550724637681,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 40),
+                              child: Row(
+                                children: [
+                                  SizedBox(
+                                    height: (wyd * sqr) * 0.2,
+                                  ),
+                                  Center(
+                                    child: Container(
+                                      height: (wyd * sqr) / 2,
+                                      width: (wyd * sqr) / 2,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                      child: Center(
+                                        child: FaIcon(
+                                          FontAwesomeIcons.info,
+                                          size: ((wyd * sqr) / 2) / 2,
+                                          color: Colors.white,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                Expanded(
-                                  child: SizedBox(),
-                                ),
-                                Text(
-                                  "About",
-                                  // style: GoogleFonts.poppins(
-                                  //   color: Color.fromRGBO(115, 115, 115, 1),
-                                  //   fontSize: (wyd * sqr) * 0.15,
-                                  //   fontWeight: FontWeight.w600,
-                                  // ),
-                                )
-                              ],
+                                  Expanded(
+                                    child: SizedBox(),
+                                  ),
+                                  Text(
+                                    "About",
+                                  
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                         ),
