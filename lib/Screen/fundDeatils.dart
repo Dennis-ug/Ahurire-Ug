@@ -39,6 +39,7 @@ class _FundDetails extends State<FundDetails> {
 
 class Details extends StatefulWidget {
   final Fund _obj;
+
   Details(
     this._obj,
   );
@@ -55,6 +56,7 @@ class _DetailState extends State<Details> {
   _DetailState(
     this._obj,
   );
+
   @override
   Widget build(BuildContext context) {
     double _hyt = MediaQuery.of(context).size.height;
@@ -74,7 +76,7 @@ class _DetailState extends State<Details> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Container(
-                  // height: _hyt * 0.289,
+                  height: _hyt * 0.289,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -85,19 +87,16 @@ class _DetailState extends State<Details> {
                         "https://pay.yesuahuriire.org/fundraising-images/${_obj.fundImage}",
                     progressIndicatorBuilder:
                         (context, url, downloadProgress) => Center(
-                            child: Container(
-                                height: 50,
-                                width: 50,
-                                child: CircularProgressIndicator(
-                                  color: Theme.of(context).primaryColor,
-                                ))),
+                      child: Container(
+                        height: 50,
+                        width: 50,
+                        child: CircularProgressIndicator(
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      ),
+                    ),
                     errorWidget: (context, url, error) => Icon(Icons.error),
                   ),
-                  // Image(
-                  //   fit: BoxFit.cover,
-                  //     image: NetworkImage(
-                  //         "https://pay.yesuahuriire.org/fundraising-images/${_obj.fundImage}",
-                  //         headers: null),),
                 ),
               ),
               SizedBox(
@@ -175,8 +174,8 @@ class _DetailState extends State<Details> {
         //Descriptin Card
         //Deassion
         Positioned(
-          top: _hyt * 0.2647321428571429,
-          left: (_wyd * 0.1159420289855072),
+          top: _hyt * 0.249321428571429,
+          left: (_wyd * 0.1189420289855072),
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
@@ -202,7 +201,7 @@ class _DetailState extends State<Details> {
                       style: TextStyle(fontFamily: "Poppins-SemiBold"),
                     ),
                     AutoSizeText(
-                      _obj.fundDetails,
+                      """${_obj.fundDetails}""",
                       style: TextStyle(
                           fontSize: (_hyt * 0.3348214285714286) * 0.0521),
                       maxLines: 4,
@@ -212,6 +211,7 @@ class _DetailState extends State<Details> {
                       children: [
                         Container(
                           decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(4),
                               color: Theme.of(context).primaryColor),
                           child: Padding(
                             padding: const EdgeInsets.all(2),
@@ -240,11 +240,12 @@ class _DetailState extends State<Details> {
                       children: [
                         Container(
                           decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(4),
                               color: Theme.of(context).primaryColor),
                           child: Padding(
                             padding: const EdgeInsets.all(2),
                             child: Text(
-                              "Target",
+                              "Raised",
                               style: TextStyle(
                                   color: Colors.white,
                                   fontFamily: "Poppins-SemiBold",
@@ -264,10 +265,16 @@ class _DetailState extends State<Details> {
                         ),
                       ],
                     ),
-                    CupertinoProgressBar(
-                      valueColor: Color.fromRGBO(255, 168, 0, 1),
-                      value: 0.9,
-                      trackColor: Colors.grey,
+                    Row(
+                      children: [
+                        CupertinoProgressBar(
+                          semanticsLabel: "Progress",
+                          valueColor: Color.fromRGBO(255, 168, 0, 1),
+                          value: (double.parse(_obj.fundBal) /
+                              double.parse(_obj.fundAmount)),
+                          trackColor: Colors.grey,
+                        ),
+                      ],
                     )
                   ],
                 )),

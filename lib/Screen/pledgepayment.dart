@@ -94,10 +94,14 @@ class _PayViewState extends State<PayView> {
                 : MainAxisAlignment.start,
             children: [
               Text(
-                "Please enter details to pay \n the pledge at this number \n ${_obj.munywanicontact}",
+                "Please enter details to pay the following pledge\n\n",
                 textAlign: TextAlign.center,
-                style: TextStyle(),
+                style: TextStyle( fontSize: 20),
               ),
+              Text("Pledge Number: ${_obj.munywanicontact}\n",textAlign: TextAlign.left,),
+              Text("Pledge Number: ${_obj.pledgeamount}\n"),
+
+              SizedBox(height: 40,),
               Form(
                 key: _payForm,
                 child: Column(

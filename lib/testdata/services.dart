@@ -129,7 +129,7 @@ class Services {
     }
   }
 
-  static Future<dynamic> getPledge(dynamic q) async {
+  static Future<dynamic> getPledge(String query) async {
     var urlF = Uri.parse("https://app.yesuahuriire.org/pledges/");
     try {
       var resF = await http.get(urlF);
@@ -147,7 +147,7 @@ class Services {
           );
         }
         return pledgeData
-            .where((plg) => plg.munywanicontact.startsWith(q as String))
+            .where((plg) => plg.munywanicontact.startsWith(query))
             .toList();
       }
     } catch (e) {

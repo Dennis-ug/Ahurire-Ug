@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:connectivity_wrapper/connectivity_wrapper.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -89,18 +91,32 @@ class _PayViewState extends State<PayView> {
       var response = await request.send();
       if (response.statusCode == 201) {
         _payResults = json.decode(await response.stream.bytesToString());
-        showDialog(
-          context: context,
-          builder: (_) => AlertDialog(
-            title: Text(_payResults["messages"][0]),
-            content: Text("Please approve the payment request \n sent to your phone"),
-          ),
-        );
+        debugPrint("data got");
+
         setState(() {
           _isPaid = true;
           isEnabled = true;
         });
-        return _payResults;
+        return AwesomeDialog(
+          context: context,
+          dialogType: DialogType.SUCCES,
+          animType: AnimType.BOTTOMSLIDE,
+          title: '${_payResults["messages"][0]}',
+          desc: "Please approve the payment request \n sent to your phone",
+          btnCancelOnPress: () {},
+          btnOkOnPress: () {},
+        )..show();
+      } else {
+        AwesomeDialog(
+          context: context,
+          dialogType: DialogType.WARNING,
+          animType: AnimType.BOTTOMSLIDE,
+          title: 'Invalid Data',
+          desc:
+              "You may have entered invalid data\n Please check the information you have entered",
+          btnCancelOnPress: () {},
+          btnOkOnPress: () {},
+        )..show();
       }
     } on Exception catch (e) {
       print(e);
@@ -329,37 +345,23 @@ class _PayViewState extends State<PayView> {
                               "Make payment",
                               style: TextStyle(color: Colors.white),
                             )
-                          : Text(
-                              "Loading.....",
-                              style: TextStyle(color: Colors.white),
-                            ),
+                          : Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: CircularProgressIndicator(
+                                color: Colors.white,
+                              ),
+                          ),
                       onPressed: () async {
-                        if (await ConnectivityWrapper.instance.isConnected) {
-                          FocusManager.instance.primaryFocus!.unfocus();
-                          if (!_payForm.currentState!.validate()) {
-                            return;
-                          }
-                          _payForm.currentState!.save();
-                          payPledge(newid, _cnt, _amt);
-                          print(_name);
-                          print(_email);
-                          print(newid);
-                          print(_cnt);
-                          print(_amt);
-                          print("done");
-                          setState(() {
-                            isEnabled = true;
-                          });
-                        } else {
-                          showDialog(
-                            context: context,
-                            builder: (_) => AlertDialog(
-                              title: Text("WARNING"),
-                              content: Text(
-                                  "The device has no internet connection.\n Please contact your internet service provider"),
-                            ),
-                          );
+                        FocusManager.instance.primaryFocus!.unfocus();
+                        if (!_payForm.currentState!.validate()) {
+                          return;
                         }
+                        _payForm.currentState!.save();
+
+                        setState(() {
+                          isEnabled = false;
+                        });
+                        payPledge(newid, _cnt, _amt);
                       },
                     )
                   ],

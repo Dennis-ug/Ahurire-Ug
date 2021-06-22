@@ -6,7 +6,6 @@ class About extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       appBar: AppBar(
         title: Text("About"),
         elevation: 0,
@@ -26,7 +25,7 @@ class AboutView extends StatelessWidget {
       child: Container(
         child: Column(
           children: [
-            Text("About Screen\n"),
+            Text("\n"),
             Text(
                 """Yesu Ahuriire Catholic Covenant Community, is a Community of Catholic faithful born within the Catholic Charismatic Renewal in the Archdiocese of Mbarara under the authority of its Local Ordinary, and committed to New Evangelization and salvation of humanity.
 

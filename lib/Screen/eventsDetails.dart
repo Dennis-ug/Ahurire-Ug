@@ -73,25 +73,28 @@ class _DetailState extends State<Details> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Container(
-                    height: _hyt * 0.289,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
+                  height: _hyt * 0.289,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  clipBehavior: Clip.antiAlias,
+                  //*Exemption review */
+                  child: CachedNetworkImage(
+                    imageUrl:
+                        "https://pay.yesuahuriire.org/event-images/${_obj.eventImage}",
+                    progressIndicatorBuilder:
+                        (context, url, downloadProgress) => Center(
+                      child: Container(
+                        height: 50,
+                        width: 50,
+                        child: CircularProgressIndicator(
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      ),
                     ),
-                    clipBehavior: Clip.antiAlias,
-                    //*Exemption review */
-                    child: CachedNetworkImage(
-                      imageUrl:
-                          "https://pay.yesuahuriire.org/event-images/${_obj.eventImage}",
-                      progressIndicatorBuilder:
-                          (context, url, downloadProgress) => Center(
-                              child: Container(
-                                  height: 50,
-                                  width: 50,
-                                  child: CircularProgressIndicator(
-                                    color: Theme.of(context).primaryColor,
-                                  ))),
-                      errorWidget: (context, url, error) => Icon(Icons.error),
-                    )),
+                    errorWidget: (context, url, error) => Icon(Icons.error),
+                  ),
+                ),
               ),
               SizedBox(
                 height: _hyt * 0.3025,
@@ -194,7 +197,7 @@ class _DetailState extends State<Details> {
                       style: TextStyle(fontFamily: "Poppins-SemiBold"),
                     ),
                     AutoSizeText(
-                      _obj.eventDetails,
+                      """${_obj.eventDetails}""",
                       style: TextStyle(
                           fontSize: (_hyt * 0.3348214285714286) * 0.0521),
                       maxLines: 6,
@@ -204,8 +207,9 @@ class _DetailState extends State<Details> {
                       height: (_hyt * 0.3348214285714286) * 0.0201,
                     ),
                     Container(
-                      decoration:
-                          BoxDecoration(color: Theme.of(context).primaryColor),
+                      decoration: BoxDecoration(
+                          color: Theme.of(context).primaryColor,
+                          borderRadius: BorderRadius.circular(4)),
                       child: Padding(
                         padding: const EdgeInsets.all(2),
                         child: Text(
@@ -229,7 +233,7 @@ class _DetailState extends State<Details> {
                             ),
                           ),
                           TextSpan(
-                            text: _obj.eventTitle,
+                            text: _obj.startOn,
                             style: TextStyle(
                               color: Colors.black,
                               fontFamily: "Poppins-SemiBold",
@@ -264,6 +268,7 @@ class _DetailState extends State<Details> {
                       children: [
                         Container(
                           decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(4),
                               color: Theme.of(context).primaryColor),
                           child: Padding(
                             padding: const EdgeInsets.all(2),

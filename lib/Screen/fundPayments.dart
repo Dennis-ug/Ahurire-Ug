@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -59,7 +60,7 @@ class _PayViewState extends State<PayView> {
 
   GlobalKey<FormState> _payForm = GlobalKey<FormState>();
 
-  Future<dynamic> payPledge(String _id, String cont, String amt) async {
+  Future<dynamic> payFund(String _id, String cont, String amt) async {
     print("Started....");
     setState(() {
       _dia ="sending request...";
@@ -79,62 +80,43 @@ class _PayViewState extends State<PayView> {
     });
     request.headers.addAll(headers);
 
-    http.StreamedResponse response = await request.send();
-    print(response.statusCode);
+    try {
+      http.StreamedResponse response = await request.send();
+      print(response.statusCode);
 
-    if (response.statusCode == 201) {
-      _payResults = json.decode(await response.stream.bytesToString());
-      setState(() {
-        isEnabled = true;
-              });
-      showDialog(
-        context: context,
-        builder: (_) => AlertDialog(
-          title: Text(_payResults["messages"][0]),
-          content: Text("Please approve the payment request \n sent to your phone"),
-        ),
-      );
-    }
-    else {
-      print("Else ${response.reasonPhrase}");
-    }
+      if (response.statusCode == 201) {
+        _payResults = json.decode(await response.stream.bytesToString());
+        setState(() {
+          isEnabled = true;
+                });
+        return AwesomeDialog(
+          context: context,
+          dialogType: DialogType.SUCCES,
+          animType: AnimType.BOTTOMSLIDE,
+          title: '${_payResults["messages"][0]}',
+          desc: "Please approve the payment request \n sent to your phone",
+          btnCancelOnPress: () {},
+          btnOkOnPress: () {},
+        )..show();
+      }
 
-    // var urlF = Uri.parse("https://payments.yesuahuriire.org/events/donations");
-    //
-    // var headers = {
-    //   'Content-Type': 'application/json',
-    //   'Charset': 'utf-8',
-    // };
-    // var request = http.Request(
-    //   'POST',
-    //   urlF,
-    // );
-    // request.body = json.encode({
-    //   "fundraising": 1,
-    //   "name": "Innocent Bigega",
-    //   "address": "N/L",
-    //   "amount": 500,
-    //   "email": "ibigega23@gmail.com",
-    //   "contact": "0755876951"
-    // });
-    // request.headers.addAll(headers);
-    // print("Getting ready....");
-    // try {
-    //   var response = await request.send();
-    //   print(response.statusCode);
-    //   if (response.statusCode == 400) {
-    //     print("ready....");
-    //     _payResults = json.decode(await response.stream.bytesToString());
-    //     print(_payResults);
-    //     setState(() {
-    //       _isPaid = true;
-    //       isEnabled = true;
-    //     });
-    //     return _payResults;
-    //   }
-    // } on Exception catch (e) {
-    //   print(e);
-    // }
+    } on Exception catch (e) {
+       return AwesomeDialog(
+              context: context,
+              dialogType: DialogType.ERROR,
+              animType: AnimType.BOTTOMSLIDE,
+              title: 'Sorry',
+              desc: " Some Thing went Wrong",
+              btnCancelOnPress: () {
+                Navigator.pop(context);
+              },
+              btnOkOnPress: () {
+                setState(() {
+
+                });
+              },
+            )..show();
+    }
   }
 
   @override
@@ -361,24 +343,24 @@ class _PayViewState extends State<PayView> {
                               "Make payment",
                               style: TextStyle(color: Colors.white),
                             )
-                          : Text(
-                              "Loading.....",
-                              style: TextStyle(color: Colors.white),
-                            ),
+                          : Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                        ),
+                      ),
                       onPressed: () {
                         FocusManager.instance.primaryFocus!.unfocus();
                         if (!_payForm.currentState!.validate()) {
                           return;
                         }
                         _payForm.currentState!.save();
-                        !isEnabled? pd.show(max: 2, msg: _dia,backgroundColor: Theme.of(context).primaryColor):null;
-                        payPledge(newid, _cnt, _amt);
-                        print(_name);
-                        print(_email);
-                        print(newid);
-                        print(_cnt);
-                        print(_amt);
-                        print("done");
+                        setState(() {
+                          isEnabled = false;
+                        });
+                        payFund(newid, _cnt, _amt);
+
+
 
                       },
                     )

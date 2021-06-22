@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:nabiituapp/testdata/services.dart';
+import 'package:http/http.dart' as http;
 
 import 'pledgepayment.dart';
 
@@ -14,146 +18,104 @@ class PledgeView extends StatefulWidget {
 }
 
 class _PledgeViewState extends State<PledgeView> {
-  bool isSearch = false;
-  final TextEditingController _search = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: !isSearch,
+        centerTitle: true,
         elevation: 0,
-        title: !isSearch
-            ? Text("Pledge Numbers")
-            : Container(
-                height: 40,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20)),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Center(
-                    child: TextField(
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        suffixIcon: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _search.text = "";
-                            });
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 15),
-                            child: Text(
-                              "Clear",
-                              style:
-                                  TextStyle(color: Colors.grey, fontSize: 15),
-                            ),
-                          ),
-                        ),
-                      ),
-                      keyboardType: TextInputType.number,
-                      controller: _search,
-                      onChanged: (txt) {
-                        setState(() {
-                          que1 = _search.text;
-                        });
-                      },
-                    ),
-                  ),
-                ),
-              ),
-        actions: [
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                isSearch = !isSearch;
-              });
-            },
-            child: Padding(
-              padding: const EdgeInsets.only(top: 14, right: 20),
-              child: !isSearch
-                  ? FaIcon(
-                      FontAwesomeIcons.search,
-                      color: Colors.white,
-                    )
-                  : Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: Text("Back"),
-                    ),
-            ),
-          )
-        ],
+        title: Text("Pay Pledge"),
       ),
-      body: _istGen(),
+      body: _ListGen(),
     );
   }
 }
 
-class _istGen extends StatefulWidget {
+class _ListGen extends StatefulWidget {
   @override
   __listGenState createState() => __listGenState();
 }
 
-class __listGenState extends State<_istGen> {
+class __listGenState extends State<_ListGen> {
   final GlobalKey<FormState> _dia = GlobalKey<FormState>();
+
+  Future<List?> getPledge(String query) async {}
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: FutureBuilder(
-          future: Services.getPledge(que1),
-          builder: (_, AsyncSnapshot snapshot) {
-            if (snapshot.data == null) {
-              return Center(
-                child: Container(
-                  height: 50,
-                  width: 50,
-                  child: CircularProgressIndicator(
-                    color: Theme.of(context).primaryColor,
-                  ),
+    return Padding(
+      padding: const EdgeInsets.all(15),
+      child: Container(
+        child: Center(
+          child: Column(
+            children: [
+              Text(
+                "Pay your Pledge",
+                style: TextStyle(
+                  fontFamily: "Poppins-SemiBold",
                 ),
-              );
-            } else {
-              return ListView.builder(
-                  itemCount: snapshot.data.length,
-                  itemBuilder: (_, int index) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Column(
-                        children: [
-                          ListTile(
-                            leading: FaIcon(
-                              FontAwesomeIcons.phone,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      Payment(snapshot.data[index]),
-                                ),
-                              );
-                              // creatDialog(
-                              //   context,
-                              //   snapshot.data[index].pledgeid,
-                              //   snapshot.data[index].munywanicontact,
-                              // );
-                            },
-                            title: Text(snapshot.data[index].munywanicontact),
-                            // subtitle: Text(
-                            //   "Pledge amount ${snapshot.data[index].pledgeamount}",
-                            // ),
-                          ),
-                          Divider(
-                            indent: 20,
-                            thickness: 1.2,
-                          ),
-                        ],
+              ),
+              Text(
+                "You can only pay your pledge if you are registered as the a 'Munywani'\n( Friend of the community) ",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontFamily: "Poppins-Regular",
+                ),
+              ),
+              TypeAheadFormField<Pledge>(
+                textFieldConfiguration: TextFieldConfiguration(
+                    autofocus: false,
+                    keyboardType: TextInputType.phone,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Theme.of(context).primaryColor,
+                          width: 1,
+                        ),
                       ),
-                    );
-                  });
-            }
-          }),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Theme.of(context).primaryColor,
+                          width: 1,
+                        ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Theme.of(context).primaryColor,
+                          width: 1,
+                        ),
+                      ),
+                      //helperText:
+                      //"Enter a number that is registered on mobile money",
+                      labelText: 'Payment Number',
+                      labelStyle: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                      ),
+
+                      hintText: "Enter a Number to use for payment",
+                    )),
+                suggestionsCallback: (pattern) async {
+                  return await Services.getPledge(pattern);
+                },
+                onSuggestionSelected: (data) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Payment(data),
+                    ),
+                  );
+                },
+                itemBuilder: (context, Pledge? data) {
+                  return ListTile(
+                    title: Text(data!.munywanicontact),
+                    subtitle: Text(data!.pledgeamount),
+                  );
+                },
+              )
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

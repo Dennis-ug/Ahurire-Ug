@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter_carousel_slider/carousel_slider.dart';
 import 'package:flutter_carousel_slider/carousel_slider_indicators.dart';
 import 'package:flutter_carousel_slider/carousel_slider_transforms.dart';
@@ -25,13 +28,14 @@ class _MenuScreenState extends State<MenuScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text(
           "Yesu Ahuriire Community",
         ),
         elevation: 0,
       ),
       body: MenuLayout(),
-      drawer: Drawer(),
+
     );
   }
 }
@@ -45,11 +49,22 @@ class MenuLayout extends StatefulWidget {
 
 class _MenuLayoutState extends State<MenuLayout> {
   late CarouselSliderController _sliderController;
+  // var _connectionStatus = "Unknown";
+  // late Connectivity connectivity;
+  // late StreamSubscription<ConnectivityResult> subscription;
 
   @override
   void initState() {
     super.initState();
     _sliderController = CarouselSliderController();
+
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _sliderController;
   }
 
   @override
@@ -225,26 +240,24 @@ class _MenuLayoutState extends State<MenuLayout> {
                               ///card 1
                               GestureDetector(
                                 onTap: () async {
-                                  if (await ConnectivityWrapper
-                                      .instance.isConnected) {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => ListsViewCustom(
-                                          "Events",
-                                        ),
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ListsViewCustom(
+                                        "Events",
                                       ),
-                                    );
-                                  } else {
-                                    showDialog(
-                                      context: context,
-                                      builder: (_) => AlertDialog(
-                                        title: Text("WARNING"),
-                                        content: Text(
-                                            "The device has no internet connection.\n Please contact your internet service provider"),
-                                      ),
-                                    );
-                                  }
+                                    ),
+                                  );
+                                  // } else {
+                                  //   showDialog(
+                                  //     context: context,
+                                  //     builder: (_) => AlertDialog(
+                                  //       title: Text("WARNING"),
+                                  //       content: Text(
+                                  //           "The device has no internet connection.\n Please contact your internet service provider"),
+                                  //     ),
+                                  //   );
+                                  // }
                                 },
                                 child: Container(
                                   height: wyd * sqr,
@@ -285,27 +298,25 @@ class _MenuLayoutState extends State<MenuLayout> {
                                 ),
                               ),
                               GestureDetector(
-                                onTap: () async {
-                                  if (await ConnectivityWrapper
-                                      .instance.isConnected) {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => ListsViewCustom(
-                                                "Fundraising",
-                                              )),
-                                    );
-                                  } else {
-                                    showDialog(
-                                      context: context,
-                                      builder: (_) => AlertDialog(
-                                        title: Text("WARNING"),
-                                        content: Text(
-                                            "The device has no internet connection.\n Please contact your internet service provider"),
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ListsViewCustom(
+                                        "Fundraising",
                                       ),
-                                    );
-                                  }
-                                  ;
+                                    ),
+                                  );
+                                  // } else {
+                                  //   showDialog(
+                                  //     context: context,
+                                  //     builder: (_) => AlertDialog(
+                                  //       title: Text("WARNING"),
+                                  //       content: Text(
+                                  //           "The device has no internet connection.\n Please contact your internet service provider"),
+                                  //     ),
+                                  //   );
+                                  // }
                                 },
                                 child: Container(
                                   height: wyd * sqr,
@@ -351,26 +362,26 @@ class _MenuLayoutState extends State<MenuLayout> {
                               ///card 3
                               GestureDetector(
                                 onTap: () async {
-                                  if (await ConnectivityWrapper
-                                      .instance.isConnected) {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => ListsViewCustom(
-                                          "Ministries",
-                                        ),
+                                  // if (await ConnectivityWrapper
+                                  //     .instance.isConnected) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ListsViewCustom(
+                                        "Ministries",
                                       ),
-                                    );
-                                  } else {
-                                    showDialog(
-                                      context: context,
-                                      builder: (_) => AlertDialog(
-                                        title: Text("WARNING"),
-                                        content: Text(
-                                            "The device has no internet connection.\n Please contact your internet service provider"),
-                                      ),
-                                    );
-                                  }
+                                    ),
+                                  );
+                                  // } else {
+                                  //   showDialog(
+                                  //     context: context,
+                                  //     builder: (_) => AlertDialog(
+                                  //       title: Text("WARNING"),
+                                  //       content: Text(
+                                  //           "The device has no internet connection.\n Please contact your internet service provider"),
+                                  //     ),
+                                  //   );
+                                  // }
                                   ;
                                 },
                                 child: Container(
@@ -403,12 +414,6 @@ class _MenuLayoutState extends State<MenuLayout> {
                                       )),
                                       Text(
                                         "Ministries",
-                                        // style: GoogleFonts.poppins(
-                                        //   color:
-                                        //       Color.fromRGBO(115, 115, 115, 1),
-                                        //   fontSize: (wyd * sqr) * 0.15,
-                                        //   fontWeight: FontWeight.w600,
-                                        // ),
                                       )
                                     ],
                                   ),
@@ -423,8 +428,13 @@ class _MenuLayoutState extends State<MenuLayout> {
                           height: hyt * 0.0179,
                         ),
                         GestureDetector(
-                          onTap: (){
-                            Navigator.push(context, MaterialPageRoute(builder: (contex)=>About()));
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => About(),
+                              ),
+                            );
                           },
                           child: Container(
                             height: (wyd * sqr) / 1.5,
@@ -434,7 +444,8 @@ class _MenuLayoutState extends State<MenuLayout> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 40),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 40),
                               child: Row(
                                 children: [
                                   SizedBox(
@@ -462,7 +473,6 @@ class _MenuLayoutState extends State<MenuLayout> {
                                   ),
                                   Text(
                                     "About",
-                                  
                                   )
                                 ],
                               ),
